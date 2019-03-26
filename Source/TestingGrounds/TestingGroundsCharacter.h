@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "TestingGroundsCharacter.generated.h"
 
+class AGun;
 class UInputComponent;
 
 UCLASS(config=Game)
@@ -31,8 +32,14 @@ class ATestingGroundsCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UMotionControllerComponent* L_MotionController;
 
+private:
+	AGun * Gun;
+
 public:
 	ATestingGroundsCharacter();
+
+	UPROPERTY(EditDefaultsOnly, Category = Gameplay)
+	TSubclassOf<AGun> GunBlueprint;
 
 protected:
 	virtual void BeginPlay();
