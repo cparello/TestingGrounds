@@ -26,17 +26,17 @@ AGun::AGun()
 
 	// Create a gun and attach it to the right-hand VR controller.
 	// Create a gun mesh component
-	VR_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("VR_Gun"));
+	//VR_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("VR_Gun"));
 	/*VR_Gun->SetOnlyOwnerSee(true);			// only the owning player will see this mesh*/
-	VR_Gun->bCastDynamicShadow = false;
-	VR_Gun->CastShadow = false;
+	//VR_Gun->bCastDynamicShadow = false;
+	//VR_Gun->CastShadow = false;
 	//VR_Gun->SetupAttachment(R_MotionController);
-	VR_Gun->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
+	//VR_Gun->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
 
-	VR_MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("VR_MuzzleLocation"));
-	VR_MuzzleLocation->SetupAttachment(VR_Gun);
-	VR_MuzzleLocation->SetRelativeLocation(FVector(0.000004, 53.999992, 10.000000));
-	VR_MuzzleLocation->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));		// Counteract the rotation of the VR gun model.
+	//VR_MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("VR_MuzzleLocation"));
+	//VR_MuzzleLocation->SetupAttachment(VR_Gun);
+	//VR_MuzzleLocation->SetRelativeLocation(FVector(0.000004, 53.999992, 10.000000));
+	//VR_MuzzleLocation->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));		// Counteract the rotation of the VR gun model.
 
 }
 
@@ -58,10 +58,10 @@ void AGun::Tick(float DeltaTime)
 void AGun::OnFire()
 {
 	// try and fire a projectile
-	if (ProjectileClass != NULL)
+	if (ProjectileClass != nullptr)
 	{
 		UWorld* const World = GetWorld();
-		if (World != NULL)
+		if (World != nullptr)
 		{
 // 			if (bUsingMotionControllers)
 // 			{
@@ -86,16 +86,16 @@ void AGun::OnFire()
 	}
 
 	// try and play the sound if specified
-	if (FireSound != NULL)
+	if (FireSound != nullptr)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
 	}
 
 	// try and play a firing animation if specified
-	if (FireAnimation != NULL)
+	if (FireAnimation != nullptr)
 	{
 		
-		if (AnimInstance != NULL)
+		if (AnimInstance != nullptr)
 		{
 			AnimInstance->Montage_Play(FireAnimation, 1.f);
 		}

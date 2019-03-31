@@ -36,7 +36,7 @@ AMyCharacter::AMyCharacter()
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	if (GunBlueprint == NULL) {
+	if (GunBlueprint == nullptr) {
 		UE_LOG(LogTemp, Warning, TEXT("Gun blueprint missing."));
 		return;
 	}
