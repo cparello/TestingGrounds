@@ -4,6 +4,7 @@
 #include "UnrealMathUtility.h"
 #include "Engine/World.h"
 #include "Engine/EngineTypes.h"
+#include "DrawDebugHelpers.h"
 
 
 // Sets default values
@@ -14,21 +15,26 @@ ATile::ATile()
 
 }
 
-void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int MinSpawn, int MaxSpawn)
+void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int MinSpawn, int MaxSpawn, float Radius, float MinScale, float MaxScale)
 {
-	FVector Min(0, -2000, 0);
-	FVector Max(4000, 2000, 0);
-	FBox Bounds(Min, Max);
-
+	
 	int NumberToSpawn = FMath::RandRange(MinSpawn, MaxSpawn);
 	
 	for(size_t i = 0; i < NumberToSpawn; i++)
 	{
-		FVector SpawnPoint = FMath::RandPointInBox(Bounds);
-		AActor* Spawned = GetWorld()->SpawnActor(ToSpawn);
-		Spawned->SetActorRelativeLocation(SpawnPoint);
-		Spawned->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
-
+		FVector SpawnPoint;
+		float RandomScale = FMath::RandRange(MinScale, MaxScale);
+		bool found = FindEmptyLocation(SpawnPoint, Radius * RandomScale);
+		if(found)
+		{
+			float RandomRotation = FMath::RandRange(-180.f, 180.f);
+			PlaceActor(ToSpawn, SpawnPoint, RandomRotation, RandomScale);
+			UE_LOG(LogTemp, Warning, TEXT("FOUND"))
+		}else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("not found"))
+		}
+		
 	}
 }
 
@@ -36,7 +42,51 @@ void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int MinSpawn, int MaxSpawn)
 void ATile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	//CanSpawnAtLocation(GetActorLocation(), 300);
+
+	//CanSpawnAtLocation(GetActorLocation() + FVector(0,0,1000), 300);
+}
+
+bool ATile::CanSpawnAtLocation(FVector Location, float Radius)
+{
+	FHitResult HitResult;
+	FVector GlobalLocation = ActorToWorld().TransformPosition(Location);
+	bool HasHit = GetWorld()->SweepSingleByChannel(HitResult, GlobalLocation, GlobalLocation, FQuat::Identity, ECollisionChannel::ECC_EngineTraceChannel2, FCollisionShape::MakeSphere(Radius));
+
+	FColor ResultColor = HasHit ? FColor::Red : FColor::Green;
+	//DrawDebugCapsule(GetWorld(), GlobalLocation, 0, Radius, FQuat::Identity, ResultColor, true, 100);
+
+	return HasHit;
+}
+
+bool ATile::FindEmptyLocation(FVector& OutLocation, float Radius)
+{
+	FVector Min(0, -2000, 0);
+	FVector Max(4000, 2000, 0);
+	FBox Bounds(Min, Max);
+
+	const int MAX_ATTEMPTS = 500;
+
+	for(size_t i = 0; i < MAX_ATTEMPTS; i++)
+	{
+		FVector CandidatePoint = FMath::RandPointInBox(Bounds);
+		if(CanSpawnAtLocation(CandidatePoint, Radius))
+		{
+			OutLocation = CandidatePoint;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void ATile::PlaceActor(TSubclassOf<AActor> ToSpawn, FVector SpawnPoint, float Rotation, float Scale)
+{
+	AActor* Spawned = GetWorld()->SpawnActor<AActor>(ToSpawn);
+	Spawned->SetActorRelativeLocation(SpawnPoint);
+	Spawned->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
+	Spawned->SetActorRotation(FRotator(0, Rotation, 0));
+	Spawned->SetActorScale3D(FVector(Scale));
 }
 
 // Called every frame
