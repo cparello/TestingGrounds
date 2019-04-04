@@ -17,9 +17,9 @@ public:
 	UGrassComponent();
 
 	UPROPERTY(EditDefaultsOnly, Category = Spawning)
-		FBox SpawningExtents;
+	FBox SpawningExtents;
 	UPROPERTY(EditDefaultsOnly, Category = Spawning)
-		int SpawnCount;
+	int SpawnCount;
 
 protected:
 	// Called when the game starts

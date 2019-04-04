@@ -29,10 +29,10 @@ void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int MinSpawn, int MaxSpawn,
 		{
 			float RandomRotation = FMath::RandRange(-180.f, 180.f);
 			PlaceActor(ToSpawn, SpawnPoint, RandomRotation, RandomScale);
-			UE_LOG(LogTemp, Warning, TEXT("FOUND"))
+			//UE_LOG(LogTemp, Warning, TEXT("FOUND"))
 		}else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("not found"))
+			//UE_LOG(LogTemp, Warning, TEXT("not found"))
 		}
 		
 	}
@@ -44,7 +44,7 @@ void ATile::BeginPlay()
 	Super::BeginPlay();
 	//CanSpawnAtLocation(GetActorLocation(), 300);
 
-	//CanSpawnAtLocation(GetActorLocation() + FVector(0,0,1000), 300);
+	//CanSpawnAtLocation(GetActorLocation() + FVector(0,0,1000), 300)
 }
 
 bool ATile::CanSpawnAtLocation(FVector Location, float Radius)
